@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "strict": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "lib": ["dom", "es2015"],
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/**/*",
+    "dev/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
