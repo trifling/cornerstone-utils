@@ -10,6 +10,7 @@ module.exports = merge(common, {
     "cornerstone-core": "cornerstone",
     "cornerstone-wado-image-loader": "cornerstoneWADOImageLoader",
     "cornerstone-math": "cornerstoneMath",
+    "cornerstone-tools": "cornerstoneTools",
     "dicom-parser": "dicomParser"
   }
 });
