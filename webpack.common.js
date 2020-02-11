@@ -10,8 +10,9 @@ module.exports = {
   output: {
     filename: '[name]-[git-revision-version].js',
     path: path.resolve(__dirname, 'dist'),
-    //library: 'cornerstone-utils',
-    libraryTarget: 'commonjs2'
+    library: 'CornerstoneUtils',
+    // libraryTarget: 'commonjs2'
+    // libraryTarget: 'browser'
   },
   module: {
     rules: [

@@ -5,23 +5,25 @@ import * as rxjs from 'rxjs';
 declare const cornerstoneWADOImageLoader;
 declare const cornerstone;
 
-// try {
+let cornerstoneWADOImageLoaderInitialized = false;
+if (!cornerstoneWADOImageLoaderInitialized) {
+  try {
+    cornerstoneWADOImageLoaderInitialized = true;
+    cornerstoneWADOImageLoader.webWorkerManager.initialize({
+      maxWebWorkers: 8,
+      startWebWorkersOnDemand: true,
+      webWorkerTaskPaths: [],
+      taskConfiguration: {
+            decodeTask: {
+            initializeCodecsOnStartup: false,
+            strict: true,
+            usePDFJS: false,
+        }
+      }
+    });
+  } catch (error) { }
   cornerstoneWADOImageLoader.wadouri.register(cornerstone);
-  // cornerstoneWADOImageLoader.webWorkerManager.initialize({
-  //   maxWebWorkers: 8,
-  //   startWebWorkersOnDemand: true,
-  //   webWorkerTaskPaths: [],
-  //   taskConfiguration: {
-  //         decodeTask: {
-  //         initializeCodecsOnStartup: false,
-  //         strict: true,
-  //         usePDFJS: false,
-  //     }
-  //   }
-  // });
-// } catch (error) {
-//   throw new Error('cornerstoneWADOImageLoader is not loaded');
-// }
+}
 
 /**
  * A Cornerstone stack of images
