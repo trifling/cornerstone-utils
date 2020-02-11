@@ -1,7 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
  
 module.exports = {
   entry: {
@@ -11,8 +9,6 @@ module.exports = {
     filename: '[name]-[git-revision-version].js',
     path: path.resolve(__dirname, 'dist'),
     library: 'CornerstoneUtils',
-    // libraryTarget: 'commonjs2'
-    // libraryTarget: 'browser'
   },
   module: {
     rules: [
@@ -31,11 +27,5 @@ module.exports = {
   node: { fs: 'empty' },
   plugins: [
     new CleanWebpackPlugin({}),
-    new GitRevisionPlugin({ branch: true }),
-    new webpack.DefinePlugin({
-      '_VERSION_': JSON.stringify((new GitRevisionPlugin).version()),
-      '_COMMITHASH_': JSON.stringify((new GitRevisionPlugin).commithash()),
-      '_BRANCH_': JSON.stringify((new GitRevisionPlugin).branch()),
-    }),
   ]
 };
