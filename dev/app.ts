@@ -9,30 +9,27 @@ window.onload = async () => {
   const response = await fetch('Prostate.zip');
 
   const viewportElement = document.getElementById('viewport1');
+  cornerstoneTools.init({ showSVGCursors: true });
   cornerstone.enable(viewportElement);
-
   const data = await response.blob();
   const { imageLoadedEvent, imageStack } = loading.loadImagesInZipFile(data);
   const stack = await imageStack;
 
-  cornerstoneTools.init();
-
   const images = stack.imageIds;
   if (images.length !== 0) {
     const idx = Math.round(images.length / 2);
+    stack.currentImageIdIndex = idx;
     cornerstone.loadImage(images[idx]).then(image => {
       cornerstone.displayImage(viewportElement, image);
     
-      cornerstoneTools.addToolForElement(viewportElement, cornerstoneTools.WwwcTool);
+      cornerstoneTools.addTool(cornerstoneTools.WwwcTool);
       cornerstoneTools.setToolActive('Wwwc', { mouseButtonMask: 1 })
       
       cornerstoneTools.addToolForElement(viewportElement, cornerstoneTools.StackScrollMouseWheelTool);
       cornerstoneTools.setToolActive('StackScrollMouseWheel', { mouseButtonMask: 2 });
+      
       cornerstoneTools.addStackStateManager(viewportElement, ['stack']);
-      cornerstoneTools.addToolState(viewportElement, 'stack', {
-        currentImageIdIndex: idx,
-        imageIds: images,
-      });
+      cornerstoneTools.addToolState(viewportElement, 'stack', stack);
     });
   }
 
