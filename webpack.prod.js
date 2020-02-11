@@ -6,6 +6,10 @@ module.exports = merge(common, {
   devtool: 'source-map',
   externals: {
     "jszip": "jszip",
-    "rxjs": "rxjs"
+    "rxjs": "rxjs",
+    "cornerstone-core": "cornerstone",
+    "cornerstone-wado-image-loader": "cornerstoneWADOImageLoader",
+    "cornerstone-math": "cornerstoneMath",
+    "dicom-parser": "dicomParser"
   }
 });

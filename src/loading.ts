@@ -2,28 +2,31 @@
 import * as jszip from 'jszip';
 import * as rxjs from 'rxjs';
 
-declare const cornerstoneWADOImageLoader;
-declare const cornerstone;
+import * as cornerstone from 'cornerstone-core';
+import * as cornerstoneMath from 'cornerstone-math';
+import * as dicomParser from 'dicom-parser';
+import * as cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
+import * as cornerstoneTools from 'cornerstone-tools';
 
-let cornerstoneWADOImageLoaderInitialized = false;
-if (!cornerstoneWADOImageLoaderInitialized) {
-  try {
-    cornerstoneWADOImageLoaderInitialized = true;
-    cornerstoneWADOImageLoader.webWorkerManager.initialize({
-      maxWebWorkers: 8,
-      startWebWorkersOnDemand: true,
-      webWorkerTaskPaths: [],
-      taskConfiguration: {
-            decodeTask: {
-            initializeCodecsOnStartup: false,
-            strict: true,
-            usePDFJS: false,
-        }
-      }
-    });
-  } catch (error) { }
-  cornerstoneWADOImageLoader.wadouri.register(cornerstone);
-}
+// cornerstoneTools.external.cornerstone = cornerstone;
+// cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
+// cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+// cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
+// cornerstoneWADOImageLoader.external.cornerstoneMath = cornerstoneMath;
+
+// cornerstoneWADOImageLoader.wadouri.register(cornerstone);
+//   cornerstoneWADOImageLoader.webWorkerManager.initialize({
+//     maxWebWorkers: navigator.hardwareConcurrency,
+//     startWebWorkersOnDemand: true,
+//     webWorkerTaskPaths: [],
+//     taskConfiguration: {
+//           decodeTask: {
+//           initializeCodecsOnStartup: false,
+//           strict: true,
+//           usePDFJS: false,
+//       }
+//     }
+//   });
 
 /**
  * A Cornerstone stack of images
@@ -44,15 +47,15 @@ export interface ImageLoadedEvent {
 
 /**
  * Loads and caches all the images in the zip file.
- * 
+ *
  * Returns an observable that sends each image as it is loaded, and a promise with a ImageStack
  * ordered by Instance Number (DICOM (0x0020, 0x0013)) when finished loading all images.
- * 
+ *
  * @param file The ZIP file to read images from
  */
 export function loadImagesInZipFile(zipFile: any): { imageLoadedEvent: rxjs.Observable<ImageLoadedEvent>, imageStack: Promise<ImageStack> } {
   let reader = new FileReader();
-  
+
   let imageLoadedEvent = new rxjs.Subject<ImageLoadedEvent>();
   let imageStack = new Promise<ImageStack>(resolve => {
     reader.onloadend = _ => {
@@ -63,7 +66,7 @@ export function loadImagesInZipFile(zipFile: any): { imageLoadedEvent: rxjs.Obse
         }
 
         const filesToLoad = files.filter(file => !zip.files[file].dir);
-        const totalFiles = filesToLoad.length; 
+        const totalFiles = filesToLoad.length;
         let partial = 0;
         Promise.all(filesToLoad.map(file => {
           return zip.file(file).async('arraybuffer').then(data => {
@@ -74,7 +77,7 @@ export function loadImagesInZipFile(zipFile: any): { imageLoadedEvent: rxjs.Obse
               partial += 1;
               imageLoadedEvent.next({
                 image: imageData,
-                total: totalFiles, 
+                total: totalFiles,
                 partial
               });
               URL.revokeObjectURL(url);
@@ -100,18 +103,18 @@ export function loadImagesInZipFile(zipFile: any): { imageLoadedEvent: rxjs.Obse
 
 /**
  * Loads and caches all the given images.
- * 
+ *
  * Returns an observable that sends each image as it is loaded, and a promise with a ImageStack
  * ordered by Instance Number (DICOM (0x0020, 0x0013)) when finished loading all images.
- * 
+ *
  * @param files A list with the image files
  */
 export function loadImages(filesToLoad: any): { imageLoadedEvent: rxjs.Observable<ImageLoadedEvent>, imageStack: Promise<ImageStack> } {
   let imageLoadedEvent = new rxjs.Subject<ImageLoadedEvent>();
   let imageStack = new Promise<ImageStack>(resolve => {
-    const totalFiles = filesToLoad.length; 
+    const totalFiles = filesToLoad.length;
     let partial = 0;
-    
+
     const promises: Promise<any>[] = [];
     for (let i = 0; i < filesToLoad.length; i++) {
       const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(filesToLoad[i]);
@@ -119,7 +122,7 @@ export function loadImages(filesToLoad: any): { imageLoadedEvent: rxjs.Observabl
         partial += 1;
         imageLoadedEvent.next({
           image: imageData,
-          total: totalFiles, 
+          total: totalFiles,
           partial
         });
         cornerstoneWADOImageLoader.wadouri.fileManager.remove(imageId);

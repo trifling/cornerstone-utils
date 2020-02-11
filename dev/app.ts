@@ -1,15 +1,24 @@
 
 import * as loading from '../src/loading';
+import { initCornerstone } from '../src';
 
-declare const cornerstone;
-declare const cornerstoneTools;
+import * as cornerstone from 'cornerstone-core';
+import * as cornerstoneTools from 'cornerstone-tools';
+// import * as cornerstoneMath from 'cornerstone-math';
+
+// cornerstoneTools.external.cornerstone = cornerstone;
+// cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
+
+// declare const cornerstone;
+// declare const cornerstoneTools;
 
 window.onload = async () => {
+
+  initCornerstone(true);
 
   const response = await fetch('Prostate.zip');
 
   const viewportElement = document.getElementById('viewport1');
-  cornerstoneTools.init({ showSVGCursors: true });
   cornerstone.enable(viewportElement);
   const data = await response.blob();
   const { imageLoadedEvent, imageStack } = loading.loadImagesInZipFile(data);
@@ -21,13 +30,13 @@ window.onload = async () => {
     stack.currentImageIdIndex = idx;
     cornerstone.loadImage(images[idx]).then(image => {
       cornerstone.displayImage(viewportElement, image);
-    
+
       cornerstoneTools.addTool(cornerstoneTools.WwwcTool);
       cornerstoneTools.setToolActive('Wwwc', { mouseButtonMask: 1 })
-      
+
       cornerstoneTools.addToolForElement(viewportElement, cornerstoneTools.StackScrollMouseWheelTool);
       cornerstoneTools.setToolActive('StackScrollMouseWheel', { mouseButtonMask: 2 });
-      
+
       cornerstoneTools.addStackStateManager(viewportElement, ['stack']);
       cornerstoneTools.addToolState(viewportElement, 'stack', stack);
     });
@@ -48,7 +57,7 @@ window.onload = async () => {
     //   touchEnabled: false,
     //   showSVGCursors: false,
     // });
- 
+
 
 
   // const imageURI = `wadouri:${imageURL}`

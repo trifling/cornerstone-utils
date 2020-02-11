@@ -9,6 +9,9 @@ module.exports = merge(common, {
   },
   mode: 'development',
   devtool: 'inline-source-map',
+  optimization: {
+    minimize: false
+  },
   devServer: {
     contentBase: path.resolve(__dirname, 'dev'),
     hot: true

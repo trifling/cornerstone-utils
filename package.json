@@ -19,6 +19,11 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "cornerstone-core": "^2.3.0",
+    "cornerstone-math": "^0.1.8",
+    "cornerstone-tools": "^4.12.1",
+    "cornerstone-wado-image-loader": "^3.0.6",
+    "dicom-parser": "^1.8.4",
     "jszip": "^3.2.2",
     "rxjs": "^6.5.4"
   },
