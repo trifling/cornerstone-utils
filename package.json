@@ -5,13 +5,14 @@
   "author": "Daniel Pena <trifling.github@gmail.com>",
   "private": true,
   "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "file-loader": "^5.0.2",
     "git-revision-webpack-plugin": "^3.0.4",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
-    "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
@@ -19,6 +20,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
     "cornerstone-core": "^2.3.0",
     "cornerstone-math": "^0.1.8",
     "cornerstone-tools": "^4.12.1",

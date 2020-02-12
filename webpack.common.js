@@ -6,13 +6,13 @@ module.exports = {
     index: './src/index.ts',
   },
   output: {
-    filename: '[name]-[git-revision-version].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     library: 'CornerstoneUtils',
   },
   module: {
     rules: [
-      { test: /\.ts$/, use: { loader: 'ts-loader' } },
+      { test: /\.ts$/, use: { loader: 'awesome-typescript-loader' } },
       { test: /\.(html)$/, use: 'html-loader' },
       { test: /\.(fs|vs)$/, use: 'raw-loader' },
     ]

@@ -3,14 +3,15 @@
     "module": "commonjs",
     "target": "es2015",
     "strict": true,
+    "declaration": true,
+    "declarationDir": "./dist",
     "noImplicitAny": false,
     "sourceMap": true,
     "lib": ["dom", "es2015"],
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
   },
   "include": [
-    "src/**/*",
-    "dev/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"

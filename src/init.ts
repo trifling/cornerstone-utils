@@ -8,7 +8,7 @@ import * as cornerstoneTools from 'cornerstone-tools';
 /**
  * Initialize cornerstone core, tools and loader
  */
-export function initCornerstone(showSVGCursors = false) {
+export function initCornerstone(showSVGCursors = false): void {
   cornerstoneTools.external.cornerstone = cornerstone;
   cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
   cornerstoneWADOImageLoader.external.cornerstone = cornerstone;

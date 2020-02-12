@@ -5,7 +5,7 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
   externals: {
-    "jszip": "jszip",
+    "jszip": "JSZip",
     "rxjs": "rxjs",
     "cornerstone-core": "cornerstone",
     "cornerstone-wado-image-loader": "cornerstoneWADOImageLoader",
