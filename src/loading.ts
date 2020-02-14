@@ -8,7 +8,7 @@ import * as cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 /**
  * A Cornerstone stack of images
  */
-export interface ImageStack {
+export interface IImageStack {
   currentImageIdIndex: number;
   imageIds: string[];
 }
@@ -16,7 +16,7 @@ export interface ImageStack {
 /**
  * Event triggered when an image has been loaded
  */
-export interface ImageLoadedEvent {
+export interface IImageLoadedEvent {
   image: any;
   partial: number;
   total: number;
@@ -30,52 +30,50 @@ export interface ImageLoadedEvent {
  *
  * @param file The ZIP file to read images from
  */
-export function loadImagesInZipFile(zipFile: any): { imageLoadedEvent: rxjs.Observable<ImageLoadedEvent>, imageStack: Promise<ImageStack> } {
-  let reader = new FileReader();
+export function loadImagesInZipFile(zipFile: any): { imageLoadedEvent: rxjs.Observable<IImageLoadedEvent>,
+  imageStack: Promise<IImageStack> } {
+  const reader = new FileReader();
 
-  let imageLoadedEvent = new rxjs.Subject<ImageLoadedEvent>();
-  let imageStack = new Promise<ImageStack>(resolve => {
-    reader.onloadend = _ => {
-      jszip.loadAsync(reader.result).then(zip => {
-        const files: string[] = [];
-        for(const file in zip.files) {
-          files.push(file);
-        }
+  const imageLoadedEvent = new rxjs.Subject<IImageLoadedEvent>();
+  const imageStack = new Promise<IImageStack>((resolve) => {
+    reader.onloadend = (_) => {
+      jszip.loadAsync(reader.result).then((zip: any) => {
+        const files: string[] = Object.keys(zip.files);
 
-        const filesToLoad = files.filter(file => !zip.files[file].dir);
+        const filesToLoad = files.filter((file) => !zip.files[file].dir);
         const totalFiles = filesToLoad.length;
         let partial = 0;
-        Promise.all(filesToLoad.map(file => {
-          return zip.file(file).async('arraybuffer').then(data => {
+        Promise.all(filesToLoad.map((file) => {
+          return zip.file(file).async('arraybuffer').then((data: any) => {
             const blob = new Blob([data], {type: ''}) as any;
             const url = URL.createObjectURL(blob);
             const imageId = 'wadouri:' + url;
-            return cornerstone.loadAndCacheImage(imageId).then(imageData => {
+            return cornerstone.loadAndCacheImage(imageId).then((imageData: any) => {
               partial += 1;
               imageLoadedEvent.next({
                 image: imageData,
                 total: totalFiles,
-                partial
+                partial,
               });
               URL.revokeObjectURL(url);
               return imageData;
             });
           });
-        })).then(imageList => {
+        })).then((imageList) => {
           const sortedList = imageList.sort((a, b) => {
-            const aa = parseInt(a.data.string('x00200013'));
-            const bb = parseInt(b.data.string('x00200013'));
+            const aa = parseInt(a.data.string('x00200013'), 10);
+            const bb = parseInt(b.data.string('x00200013'), 10);
             return aa - bb;
           });
           imageLoadedEvent.complete();
-          resolve({ currentImageIdIndex: 0, imageIds: sortedList.map(x => x.imageId) });
+          resolve({ currentImageIdIndex: 0, imageIds: sortedList.map((x) => x.imageId) });
 
-        })
+        });
       });
     };
-  })
+  });
   reader.readAsArrayBuffer(zipFile);
-  return { imageLoadedEvent: imageLoadedEvent, imageStack }
+  return { imageLoadedEvent, imageStack };
 }
 
 /**
@@ -86,36 +84,37 @@ export function loadImagesInZipFile(zipFile: any): { imageLoadedEvent: rxjs.Obse
  *
  * @param files A list with the image files
  */
-export function loadImages(filesToLoad: any): { imageLoadedEvent: rxjs.Observable<ImageLoadedEvent>, imageStack: Promise<ImageStack> } {
-  let imageLoadedEvent = new rxjs.Subject<ImageLoadedEvent>();
-  let imageStack = new Promise<ImageStack>(resolve => {
+export function loadImages(filesToLoad: any): { imageLoadedEvent: rxjs.Observable<IImageLoadedEvent>,
+  imageStack: Promise<IImageStack> } {
+  const imageLoadedEvent = new rxjs.Subject<IImageLoadedEvent>();
+  const imageStack = new Promise<IImageStack>((resolve) => {
     const totalFiles = filesToLoad.length;
     let partial = 0;
 
-    const promises: Promise<any>[] = [];
-    for (let i = 0; i < filesToLoad.length; i++) {
-      const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(filesToLoad[i]);
-      const promise = cornerstone.loadAndCacheImage(imageId).then(imageData => {
+    const promises: Array<Promise<any>> = [];
+    for (const file of filesToLoad) {
+      const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
+      const promise = cornerstone.loadAndCacheImage(imageId).then((imageData: any) => {
         partial += 1;
         imageLoadedEvent.next({
           image: imageData,
           total: totalFiles,
-          partial
+          partial,
         });
         cornerstoneWADOImageLoader.wadouri.fileManager.remove(imageId);
         return imageData;
       });
       promises.push(promise);
     }
-    Promise.all(promises).then(imageList => {
+    Promise.all(promises).then((imageList) => {
       const sortedList = imageList.sort((a: any, b: any) => {
-        const aa = parseInt(a.data.string('x00200013'));
-        const bb = parseInt(b.data.string('x00200013'));
+        const aa = parseInt(a.data.string('x00200013'), 10);
+        const bb = parseInt(b.data.string('x00200013'), 10);
         return aa - bb;
       });
       imageLoadedEvent.complete();
       resolve({ currentImageIdIndex: 0, imageIds: sortedList.map((x: any) => x.imageId) });
-    })
-  })
-  return { imageLoadedEvent, imageStack }
+    });
+  });
+  return { imageLoadedEvent, imageStack };
 }

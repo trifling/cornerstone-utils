@@ -1,9 +1,9 @@
 
 import * as cornerstone from 'cornerstone-core';
 import * as cornerstoneMath from 'cornerstone-math';
-import * as dicomParser from 'dicom-parser';
-import * as cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import * as cornerstoneTools from 'cornerstone-tools';
+import * as cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
+import * as dicomParser from 'dicom-parser';
 
 /**
  * Initialize cornerstone core, tools and loader
@@ -20,12 +20,12 @@ export function initCornerstone(showSVGCursors = false): void {
     startWebWorkersOnDemand: true,
     webWorkerTaskPaths: [],
     taskConfiguration: {
-          decodeTask: {
-          initializeCodecsOnStartup: false,
-          strict: true,
-          usePDFJS: false,
-      }
-    }
+      decodeTask: {
+        initializeCodecsOnStartup: false,
+        strict: true,
+        usePDFJS: false,
+      },
+    },
   });
   cornerstoneTools.init({ showSVGCursors });
 }
