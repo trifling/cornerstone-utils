@@ -1,7 +1,8 @@
 
-import * as cornerstone from 'cornerstone-core';
-import * as cornerstoneTools from 'cornerstone-tools';
+import { CornerstoneInstances } from './init';
 import { loadImagesInZipFile } from './loading';
+
+const { cornerstone, cornerstoneTools } = CornerstoneInstances;
 
 /**
  * Load a DICOM zip file in a viewport
@@ -14,6 +15,7 @@ export async function loadZipFileInViewport(url: string, element: HTMLElement): 
   const response = await fetch(url);
 
   cornerstone.enable(element);
+
   const data = await response.blob();
   const { imageLoadedEvent, imageStack } = loadImagesInZipFile(data);
   const stack = await imageStack;
@@ -22,7 +24,7 @@ export async function loadZipFileInViewport(url: string, element: HTMLElement): 
   if (images.length !== 0) {
     const idx = Math.round(images.length / 2);
     stack.currentImageIdIndex = idx;
-    cornerstone.loadImage(images[idx]).then((image: any) => {
+    return cornerstone.loadImage(images[idx]).then((image: any) => {
       cornerstone.displayImage(element, image);
 
       cornerstoneTools.addTool(cornerstoneTools.WwwcTool);
@@ -33,6 +35,7 @@ export async function loadZipFileInViewport(url: string, element: HTMLElement): 
 
       cornerstoneTools.addStackStateManager(element, ['stack']);
       cornerstoneTools.addToolState(element, 'stack', stack);
+
     });
   }
 }

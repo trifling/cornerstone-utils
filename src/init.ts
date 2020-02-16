@@ -5,10 +5,29 @@ import * as cornerstoneTools from 'cornerstone-tools';
 import * as cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import * as dicomParser from 'dicom-parser';
 
+export interface ICornerstoneInstance {
+  cornerstone: any;
+  cornerstoneMath: any;
+  cornerstoneTools: any;
+  cornerstoneWADOImageLoader: any;
+  dicomParser: any;
+}
+
+export const CornerstoneInstances = {
+  cornerstone,
+  cornerstoneMath,
+  cornerstoneTools,
+  cornerstoneWADOImageLoader,
+  dicomParser,
+};
+
 /**
- * Initialize cornerstone core, tools and loader
+ * Initialize cornerstone core, tools and loader.
+ *
+ * @param showSVGCursors Whether tools should change the cursor when enabled
+ * @returns Instances of cornerstone core, tools and loader.
  */
-export function initCornerstone(showSVGCursors = false): void {
+export function initCornerstone(showSVGCursors = false): ICornerstoneInstance {
   cornerstoneTools.external.cornerstone = cornerstone;
   cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
   cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
@@ -28,4 +47,5 @@ export function initCornerstone(showSVGCursors = false): void {
     },
   });
   cornerstoneTools.init({ showSVGCursors });
+  return CornerstoneInstances;
 }

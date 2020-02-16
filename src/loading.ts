@@ -2,8 +2,9 @@
 import * as jszip from 'jszip';
 import * as rxjs from 'rxjs';
 
-import * as cornerstone from 'cornerstone-core';
-import * as cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
+import { CornerstoneInstances } from './init';
+
+const { cornerstone, cornerstoneWADOImageLoader } = CornerstoneInstances;
 
 /**
  * A Cornerstone stack of images
