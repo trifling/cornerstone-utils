@@ -34,7 +34,7 @@
     "cornerstone-tools": "^4.12.1",
     "cornerstone-wado-image-loader": "^3.0.6",
     "dicom-parser": "^1.8.4",
-    "jszip": "^3.2.2",
+    "jszip": "^3.7.0",
     "rxjs": "^6.5.4"
   }
 }
